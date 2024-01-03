@@ -36,7 +36,7 @@ export default function Home() {
   });
 
   return (
-    <Table>
+    <Table striped highlightOnHover>
       <Table.Thead>
         {table.getHeaderGroups().map((headerGroup) => (
           <Table.Tr key={headerGroup.id}>
