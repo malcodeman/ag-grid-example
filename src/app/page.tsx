@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-table";
 import { useQuery } from "@tanstack/react-query";
 import { getLatestRates } from "./api/queries";
+import { HeaderCell } from "./components/HeaderCell";
 
 type Column = {
   title: string;
@@ -35,10 +36,10 @@ const initialData = [
 ];
 
 export default function Home() {
-  const latestRates = useQuery({
-    queryKey: ["latestRates"],
-    queryFn: getLatestRates,
-  });
+  // const latestRates = useQuery({
+  //   queryKey: ["latestRates"],
+  //   queryFn: getLatestRates,
+  // });
   const [data, setData] = useState(initialData);
   const table = useReactTable({
     data,
@@ -54,14 +55,7 @@ export default function Home() {
             {table.getHeaderGroups().map((headerGroup) => (
               <Table.Tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <Table.Th key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </Table.Th>
+                  <HeaderCell key={header.id} header={header} />
                 ))}
               </Table.Tr>
             ))}
