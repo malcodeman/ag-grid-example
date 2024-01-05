@@ -1,5 +1,5 @@
 "use client";
-import { Table } from "@mantine/core";
+import { Box, Container, Table } from "@mantine/core";
 import { useState } from "react";
 import {
   createColumnHelper,
@@ -7,10 +7,12 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useQuery } from "@tanstack/react-query";
+import { getLatestRates } from "./api/queries";
 
 type Column = {
   title: string;
-  amount: number;
+  amount: string;
 };
 
 const columnHelper = createColumnHelper<Column>();
@@ -27,8 +29,17 @@ const columns = [
   }),
 ];
 
+const initialData = [
+  { title: "Rent", amount: "1000" },
+  { title: "Food", amount: "120" },
+];
+
 export default function Home() {
-  const [data, setData] = useState([]);
+  const latestRates = useQuery({
+    queryKey: ["latestRates"],
+    queryFn: getLatestRates,
+  });
+  const [data, setData] = useState(initialData);
   const table = useReactTable({
     data,
     columns,
@@ -36,34 +47,38 @@ export default function Home() {
   });
 
   return (
-    <Table striped highlightOnHover>
-      <Table.Thead>
-        {table.getHeaderGroups().map((headerGroup) => (
-          <Table.Tr key={headerGroup.id}>
-            {headerGroup.headers.map((header) => (
-              <Table.Th key={header.id}>
-                {header.isPlaceholder
-                  ? null
-                  : flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-              </Table.Th>
+    <Box style={{ paddingTop: "2rem" }}>
+      <Container>
+        <Table striped highlightOnHover>
+          <Table.Thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <Table.Tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <Table.Th key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </Table.Th>
+                ))}
+              </Table.Tr>
             ))}
-          </Table.Tr>
-        ))}
-      </Table.Thead>
-      <Table.Tbody>
-        {table.getRowModel().rows.map((row) => (
-          <Table.Tr key={row.id}>
-            {row.getVisibleCells().map((cell) => (
-              <Table.Td key={cell.id}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </Table.Td>
+          </Table.Thead>
+          <Table.Tbody>
+            {table.getRowModel().rows.map((row) => (
+              <Table.Tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <Table.Td key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </Table.Td>
+                ))}
+              </Table.Tr>
             ))}
-          </Table.Tr>
-        ))}
-      </Table.Tbody>
-    </Table>
+          </Table.Tbody>
+        </Table>
+      </Container>
+    </Box>
   );
 }
