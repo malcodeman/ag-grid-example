@@ -1,14 +1,17 @@
 "use client";
-import { Box, Container, Table } from "@mantine/core";
+import { Box, Container, Flex, Table } from "@mantine/core";
 import { useEffect, useState } from "react";
 import {
   ColumnResizeMode,
+  SortingState,
   createColumnHelper,
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { faker } from "@faker-js/faker";
+import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 
 type Column = {
   firstName: string;
@@ -53,11 +56,17 @@ const makeInitialData = () => {
 
 export default function Home() {
   const [data, setData] = useState<Column[]>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
   const table = useReactTable({
     data,
     columns,
     columnResizeMode,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
   });
 
   useEffect(() => {
@@ -84,12 +93,23 @@ export default function Home() {
                       position: "relative",
                     }}
                   >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
+                    {header.isPlaceholder ? null : (
+                      <Flex
+                        style={{
+                          alignItems: "center",
+                        }}
+                        onClick={header.column.getToggleSortingHandler()}
+                      >
+                        {flexRender(
                           header.column.columnDef.header,
                           header.getContext()
                         )}
+                        {{
+                          asc: <IconChevronUp size="16" />,
+                          desc: <IconChevronDown size="16" />,
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </Flex>
+                    )}
                     <Box
                       style={{
                         position: "absolute",
