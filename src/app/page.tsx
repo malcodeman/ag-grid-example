@@ -24,7 +24,12 @@ const makeInitialData = () => {
 export default function Home() {
   const [rowData, setRowData] = useState<Column[]>([]);
   const [columnDefs, _setColumnDefs] = useState<ColDef[]>([
-    { field: "firstName" },
+    {
+      field: "firstName",
+      headerCheckboxSelection: true,
+      checkboxSelection: true,
+      showDisabledCheckboxes: true,
+    },
     { field: "lastName" },
     { field: "gender" },
     { field: "email" },
@@ -50,7 +55,9 @@ export default function Home() {
           rowData={rowData}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
+          rowSelection="multiple"
           pagination
+          suppressRowClickSelection
         />
       </Container>
     </Box>
