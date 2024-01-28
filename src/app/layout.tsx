@@ -9,8 +9,8 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Pecunia",
-  description: "Multi-currency budgeting app",
+  title: "AG Grid example",
+  description: "AG Grid example",
 };
 
 export default function RootLayout({
